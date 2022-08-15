@@ -1,0 +1,12 @@
+#hiddenCanvas {
+    display: none;
+}
+
+#result {
+    max-width: 100%;
+    display: none;
+}
+
+#result img {
+    margin: 10px;
+}
