@@ -1,7 +1,7 @@
 const result = document.querySelector('#result');
 const splitButton = document.querySelector('#split');
 const fileInput = document.querySelector('#file');
-const urlInput = document.querySelector('#url');
+// const urlInput = document.querySelector('#url');
 const canvas = document.querySelector('#canvas');
 const size = document.querySelector('#size');
 const download = document.querySelector('#download');
@@ -60,9 +60,9 @@ function readAndImagesplit () {
             imageSrc = this.result;
             imagesplit(imageSrc);
         }); 
-    } else if (urlInput.value) {
-        imageSrc = urlInput.value;
-        imagesplit(imageSrc);
+    // } else if (urlInput.value) {
+    //     imageSrc = urlInput.value;
+    //     imagesplit(imageSrc);
     } else {
         return
     }
@@ -72,11 +72,11 @@ function readAndImagesplit () {
 splitButton.addEventListener('click', () => {readAndImagesplit()});
 columns.addEventListener('change', () => {readAndImagesplit()});
 rows.addEventListener('change', () => {readAndImagesplit()});
-urlInput.addEventListener('keypress', (e) => {
-    if (e.keyCode === 13) {
-        readAndImagesplit();
-    }
-});
+// urlInput.addEventListener('keypress', (e) => {
+//     if (e.keyCode === 13) {
+//         readAndImagesplit();
+//     }
+// });
 fileInput.addEventListener('change', () => {
     readAndImagesplit();
 });
