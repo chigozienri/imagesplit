@@ -1,7 +1,6 @@
 const result = document.querySelector('#result');
 const splitButton = document.querySelector('#split');
 const fileInput = document.querySelector('#file');
-// const urlInput = document.querySelector('#url');
 const canvas = document.querySelector('#canvas');
 const size = document.querySelector('#size');
 const download = document.querySelector('#download');
@@ -26,8 +25,9 @@ function cutImageUp(image, numColsToCut=2, numRowsToCut=2) {
     var imagePieces = [];
     var widthOfOnePiece = image.width / numColsToCut
     var heightOfOnePiece = image.height / numRowsToCut
-    for(var x = 0; x < numColsToCut; ++x) {
-        for(var y = 0; y < numRowsToCut; ++y) {
+
+    for(var y = 0; y < numRowsToCut; ++y) {
+        for(var x = 0; x < numColsToCut; ++x) {
             var canvas = document.createElement('canvas');
             canvas.width = widthOfOnePiece;
             canvas.height = heightOfOnePiece;
@@ -43,10 +43,22 @@ function cutImageUp(image, numColsToCut=2, numRowsToCut=2) {
         }
     }
     removeAllChildNodes(result);
+    let filename = fileInput.files[0].name;
+    filename = filename.substring(0, filename.lastIndexOf('.'));
+    let message = document.createElement('div');
+    message.setAttribute('class', 'message');
+    message.innerHTML = 'Click/tap image to download';
+    result.append(message);
     for (let i=0; i<imagePieces.length; ++i) {
         let imageElement = document.createElement('img');
         imageElement.src = imagePieces[i];
-        result.append(imageElement);
+        let link = document.createElement('a');
+        link.setAttribute('download', filename +'_' + i + '.png');
+        link.setAttribute('href', '#');
+        link.setAttribute('id', 'download');
+        link.append(imageElement);
+        link.addEventListener('click', () => {dlCanvas(imageElement, link)}, false);
+        result.append(link);
     }
 }
 
@@ -59,10 +71,7 @@ function readAndImagesplit () {
         fileReader.addEventListener("load", function () {
             imageSrc = this.result;
             imagesplit(imageSrc);
-        }); 
-    // } else if (urlInput.value) {
-    //     imageSrc = urlInput.value;
-    //     imagesplit(imageSrc);
+        });
     } else {
         return
     }
@@ -72,16 +81,15 @@ function readAndImagesplit () {
 splitButton.addEventListener('click', () => {readAndImagesplit()});
 columns.addEventListener('change', () => {readAndImagesplit()});
 rows.addEventListener('change', () => {readAndImagesplit()});
-// urlInput.addEventListener('keypress', (e) => {
-//     if (e.keyCode === 13) {
-//         readAndImagesplit();
-//     }
-// });
 fileInput.addEventListener('change', () => {
     readAndImagesplit();
 });
-size.addEventListener('change', () => {
-    if (imageSrc) {
-        imagesplit(imageSrc);
-    }
-});
+
+function dlCanvas(img, a) {
+    // https://stackoverflow.com/a/12796748
+    var dt = img.src;
+    /* Change MIME type to trick the browser to downlaod the file instead of displaying it */
+    dt = dt.replace(/^data:image\/[^;]*/, 'data:application/octet-stream');
+  
+    a.setAttribute('href', dt);
+  };
